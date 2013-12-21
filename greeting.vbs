@@ -37,5 +37,4 @@ myRegExp.IgnoreCase = True
 'myRegExp.Global = True
 myRegExp.Pattern = "&ldquo;(.*)&rdquo;"
 quote_text = myRegExp.Replace(xmlhttp.responseText, "$1")
-WScript.Echo quote_text
 speech.Speak quote_text
