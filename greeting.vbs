@@ -24,17 +24,17 @@ the_year=Year(Date)
 greeting2="Today is " & day_of_week & ", the " & day_in_month & " of " & month_name & " " & the_year
 speech.Speak greeting2
 
-'download verse of the day page
-'modified from http://markalexanderbain.suite101.com/how-to-use-vbscript-to-download-a-web-page-a89661
-dim xmlhttp : set xmlhttp = createobject("msxml2.xmlhttp.3.0")
-xmlhttp.open "get", "http://www.biblegateway.com/votd/get/?format=html&version=ESV", false
-xmlhttp.send
+Set xDoc = CreateObject("Microsoft.XMLDOM")
+xDoc.async = False
 
-'Prepare a regular expression object
-Set myRegExp = New RegExp
-dim quote_text
-myRegExp.IgnoreCase = True
-'myRegExp.Global = True
-myRegExp.Pattern = "&ldquo;(.*)&rdquo;"
-quote_text = myRegExp.Replace(xmlhttp.responseText, "$1")
-speech.Speak quote_text
+If xDoc.Load("http://www.biblegateway.com/votd/get/?format=xml&version=ESV") Then
+	Dim sXPath: sXPath = "/votd/content"
+	Set quotation = xDoc.selectSingleNode (sXPath)
+	speech.Speak Trim(quotation.Text)
+
+	Dim sXPath2 : sXPath2 = "/votd/reference"
+	Set reference = xDoc.selectSingleNode(sXPath2)
+	speech.Speak reference.Text
+End If
+
+Set xDoc = Nothing
